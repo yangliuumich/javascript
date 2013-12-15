@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<head>
+  <title>UMSI Master of Science in Information Tracking and Planning Form</title>
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script>
+    var class_data = [  //class number, credits, [category,...], name
+      ["500", 3, ["mandatory"], "Information in Social Systems"],
+      ["501", 3, ["mandatory"], "Contextual Inquiry and Project Management"],
+      ["502", 3, ["mandatory"], "Networked Computing"],
+      ["pep6", 6, ["pep"], "pep"],
+      ["Cognate1", 3, ["cognate"], "A course from other departments."],
+      ["Cognate2", 3, ["cognate"], "A course from other departments."],
+      ["520", 3, ["HCI_spe", "HCI"], "Graphic Design"],
+      ["523", 3, ["management"], "Information and Control"],
+      ["529", 3, ["HCI_spe", "HCI"], "eCommunities: Analysis and Design of Online Interaction Environments"],
+      ["530", 3, ["management"], "Principles in Management"],
+      ["531", 3, ["HCI_spe", "HCI", "LIS_spe", "LIS", "IAR_spe", "IAR"], "Human Interaction in Information Retrieval"],
+      ["534", 3, ["management"], "Theories of Social Influence"],
+      ["539", 3, ["HCI_programming", "HCI", "LIS_spe", "LIS", "IAR_programming", "IAR"], "Design of Complex Web Sites"],
+      ["543", 3, ["HCI_programming", "HCI", "IAR_programming", "IAR"], "Programming (Java)"],
+      ["544", 3, ["research_method","HCI_statistics", "HCI", "IAR_statistics", "IAR"], "Introduction to Statistics and Data Analysis"],
+      ["551", 3, ["HCI_spe", "HCI", "LIS_spe", "LIS"], "Information-Seeking Behavior"],
+      ["561", 3, ["HCI_spe", "HCI", "IAR_spe", "IAR"], "Natural Language Processing"],
+      ["562", 1.5, ["research_method"], "Microeconomics for Information Professionals"],
+      ["563", 1.5, ["research_method"], "Game Theory"],
+      ["581", 3, ["LIS_spe", "LIS"], "Preservation Administration"],
+      ["582", 3, ["HCI_required","HCI_spe", "HCI"], "Introduction to Interaction Design"],
+      ["583", 1.5, ["HCI_spe", "HCI"], "Recommender Systems"],
+      ["586", 3, ["LIS_spe", "LIS"], "Music Bibliography"],
+      ["588", 3, ["HCI_required", "HCI_spe", "HCI"], "Fundamentals of Human Behavior"],
+      ["601", 1.5, ["research_method", "HCI_spe", "HCI", "IAR_spe", "IAR"], "Data Manipulation"],
+      ["606", 3, ["HCI_spe", "HCI"], "Personal Information Design"],
+      ["608", 3, ["IAR_spe", "IAR"], "Networks"], 
+      ["612", 3, ["HCI_spe", "HCI"], "Pervasive Interaction Design"],
+      ["617", 3, ["management"], "Choice Architecture"],
+      ["618", 1.5, ["research_method", "HCI_spe", "HCI", "IAR_spe", "IAR"], "Exploratory Data Analysis"],
+      ["620", 3, ["LIS_spe", "LIS"], "Collection Development and Management"],
+      ["622", 3, ["research_method", "HCI_required", "HCI_spe", "HCI"], "Needs Assessment and Usability Evaluation"],
+      ["623", 3, ["research_method", "LIS_spe", "LIS"], "Research Methods for Information Professionals"],
+      ["624", 3, ["LIS_spe", "LIS"], "Media for Children and Young Adults"],
+      ["626", 3, ["management", "LIS_spe", "LIS"], "Management of Nonprofit Libraries and Information Services"],
+      ["627", 3, ["management"], "Managing the Information Technology Organization"],
+      ["629", 3, ["LIS_spe", "LIS"], "Access Systems for Archival Materials"],
+      ["631", 1.5, ["HCI_spe", "HCI", "LIS_spe", "LIS"], "Content Management System"],
+      ["638", 3, ["management", "LIS_spe", "LIS"], "School Library Media Management"],
+      ["639", 1.5, ["LIS_spe", "LIS"], "Web Archiving"],
+      ["640", 3, ["LIS_spe", "LIS"], "Digital Libraries and Archives"],
+      ["641", 3, ["LIS_spe", "LIS"], "Information Literacy for Teaching and Learning"],
+      ["643", 3, ["LIS_spe", "LIS"], "Professional Practice in Libraries and Information Centers"],
+      ["647", 3, ["LIS_required", "LIS_spe", "LIS"], "Information Resources and Services"],
+      ["649", 3, ["HCI_spe", "HCI", "IAR_spe", "IAR"], "Information Visualization"],
+      ["650", 3, ["LIS_spe", "LIS", "IAR_spe", "IAR"], "Information Retrieval"],
+      ["653", 3, ["LIS_spe", "LIS"], "Evidence-Based Health Information Practice"],
+      ["658", 3, ["HCI_spe", "HCI", "LIS_spe", "LIS"], "Information Architecture"],
+      ["663", 3, ["management", "LIS_spe", "LIS"], "Entrepreneurship in the Information Industry"],
+      ["664", 3, ["HCI_programming", "HCI_spe", "HCI", "LIS_spe", "LIS", "IAR_spe", "IAR", "IAR_programming"], "Database Application Design"],
+      ["665", 3, ["LIS_spe", "LIS", "IAR_spe", "IAR"], "Online Searching and Databases"],
+      ["666", 3, ["LIS_spe", "LIS"], "Organization of Information Resources"], 
+      ["686", 3, ["HCI_spe", "HCI"], "User Generated Content"],
+      ["689", 3, ["HCI_spe", "HCI"], "Computer-Supported Cooperative Work"],
+      ["694", 3, ["HCI_spe", "HCI"], "Advanced Project and Social Computing Design"],
+      ["721", 3, ["IAR_spe", "IAR"], "Data Mining: Methods and Applications"],
+      ["760", 3, ["IAR_spe", "IAR"], "Language and Information"],
+      ["767", 3, ["IAR_spe", "IAR"], "Advanced Natural Language Processing and Information Retrieval"],
+      ["840", 3, ["research_method"], "Research Methods"],
+    ];
+    
+    function Course(number, credits, category, name){
+      this.number = number;
+      this.credits = credits;
+      this.category = category;
+      this.name = name;
+      this.checked = false;
+      this.waived = false;
+    };
+
+    var class_list = []; //class_list = [Course, Course...] A list of Objects. 
+    for (var i = 0; i < class_data.length; i++){
+      class_list[i] = new Course(class_data[i][0],class_data[i][1],class_data[i][2], class_data[i][3]);
+    }
+    var s;
+    var specialization;
+    var category;
+    function clear_credits(){
+      category = {
+	all:[0, 48],
+	mandatory:[0, 9],
+	management:[0, 3],
+	research_method:[0,3],
+	cognate:[0,3],
+	pep:[0,6],
+        HCI: [0, 24],
+        HCI_spe:[0,15],
+        HCI_required:[0,9],
+	HCI_programming:[0,6],
+	HCI_statistics:[0,3],
+	LIS:[0,15],
+	LIS_spe:[0,15],
+	LIS_required:[0,3],
+	IAR: [0,24],
+	IAR_spe: [0, 15],
+	IAR_programming:[0,6],
+	IAR_statistics:[0,3],
+      };
+    };
+    clear_credits();
+
+    function update_credits(){
+	clear_credits();
+	//iterate through all course object to update credits if checked
+	for (var i = 0; i < class_list.length; i++){
+	if (document.getElementById("waived_"+class_list[i].number)){
+		class_list[i].waived = document.getElementById("waived_"+class_list[i].number).checked;
+	}
+	if (class_list[i].waived){
+	document.getElementById(class_list[i].number).checked = false;
+	document.getElementById(class_list[i].number).disabled = true;
+	if(document.getElementById(class_list[i].number+"_copy")) {
+	document.getElementById(class_list[i].number+"_copy").checked = false;
+	document.getElementById(class_list[i].number+"_copy").disabled = true;
+	}
+	switch(class_list[i].number){
+		case "502"://mandatory-3
+		category[class_list[i].category[0]][1] -= class_list[i].credits;
+		break;
+		case "544"://HCI_statistics-3, IAR_statistics-3
+		category["HCI_statistics"][1] -= class_list[i].credits;
+		category["IAR_statistics"][1] -= class_list[i].credits;
+		break;
+	}
+	}//end if waived
+	else {
+	if (document.getElementById(class_list[i].number)){
+		document.getElementById(class_list[i].number).disabled = false;
+		class_list[i].checked = document.getElementById(class_list[i].number).checked;
+		if(document.getElementById(class_list[i].number + "_copy")) {
+			document.getElementById(class_list[i].number + "_copy").checked = class_list[i].checked;
+			document.getElementById(class_list[i].number + "_copy").disabled = false;
+		}
+	if (class_list[i].checked){
+		category["all"][0] += class_list[i].credits;      
+		for (var c = 0; c < class_list[i].category.length; c++){
+			category[class_list[i].category[c]][0] += class_list[i].credits;
+		}
+	}//end if checked
+	}
+	}//end else
+	}//end for
+      switch (category["cognate"][0]){
+      case 6:
+	category["cognate"][1] = 6;
+	break;
+      default:
+            break;
+      }
+      if (category[specialization]){
+		switch(specialization){
+      case "HCI": case "IAR": 
+	category[specialization+"_programming"][1] = 6 - document.getElementById(specialization+"_programming_three").checked * 3 - document.getElementById(specialization+"_programming_six").checked * 6;
+        category[specialization][1] = category[specialization+"_spe"][1] + category[specialization+"_programming"][1] + category[specialization+"_statistics"][1];   
+    break;
+      default:break;
+        }
+        document.getElementById("specialization").innerHTML = category[specialization][0] + " / " + category[specialization][1];
+      }
+      for (var c in category){
+        if (document.getElementById(c+"_heading")) var d = document.getElementById(c+"_heading");	
+        if (c==specialization){ var d = document.getElementById("specialization_heading"); }
+	if(document.getElementById(c+"_heading") || c==specialization
+){
+	if (isSatisfied(c)){
+		d.classList.add("satisfied");
+        }
+        else {
+          if ((" " + d.className).indexOf(" satisfied") > -1){
+		d.classList.remove("satisfied"); }
+        }
+	}
+      }//end for
+    };
+
+    function isSatisfied(c){
+	switch(c){
+		case "HCI":
+			return isSatisfied("HCI_required") && isSatisfied("HCI_programming") && isSatisfied("HCI_statistics") && isSatisfied("HCI_spe");
+	        case "LIS":
+			return isSatisfied("LIS_required") && isSatisfied("LIS_spe");
+		case "all":
+			if (specialization!="HCI" && specialization!="LIS") return false;
+			return isSatisfied("mandatory") && isSatisfied("management") && isSatisfied("research_method") && isSatisfied("cognate") && isSatisfied("pep") && isSatisfied(specialization) && category["all"][0] >= category["all"][1];
+		default:
+			return category[c][0] >= category[c][1];
+	}
+    };
+
+    function write_content(category_list){
+        s = document.getElementById("s_choosing");
+	specialization = s.options[s.selectedIndex].value;
+  
+	var is_SI = "SI ";
+	for (var c = 0; c < category_list.length; c++){
+		if (category_list[c] == "cognate") is_SI = "";
+		var content = "";
+		for (var i = 0; i < class_list.length; i++){
+		    if (class_list[i].category.indexOf(category_list[c]) > -1){
+			    if (document.getElementById(class_list[i].number)){  //the course has already appeared
+			    if (category_list[c] != "HCI_spe" && class_list[i].category.indexOf("LIS_required")<0)
+			    content += "<input type='checkbox' id=" + class_list[i].number + "_copy" + " name="+ class_list[i].number +" onchange='copyChanged(" + class_list[i].number + "); update();'/> " + "<label for=" + class_list[i].number +"_copy"+ ">"+ is_SI + class_list[i].number + ": " + class_list[i].name +" (" + class_list[i].credits + ") " + "</label>" + "</br>";
+            
+			    } 
+			    else      
+			    content += "<input type='checkbox' id=" + class_list[i].number + " name="+ class_list[i].number +" onchange='update();'/> " + "<label for="+class_list[i].number +">" + is_SI + class_list[i].number + ": " + class_list[i].name +"(" + class_list[i].credits + ") " + "</label></br>";
+		    }
+		}
+	if (document.getElementById(category_list[c]))
+	document.getElementById(category_list[c]+"_content").innerHTML = content;
+        }
+    };
+
+    function write_specialization(){
+	s = document.getElementById("s_choosing");
+        specialization = s.options[s.selectedIndex].value;
+	var content = "";
+	switch (specialization){
+	case "HCI":
+	content += "<p id='HCI_spe_heading' class='subheading'>At least 15 credits from the following list: <span id='HCI_spe'>0 / 15</span></p>";
+	content += "<p id='HCI_required_heading'>Required Coureses: <span id='HCI_required'>0 / 9</span></p>";        
+	content += "<div id='HCI_required_content'></div>";       
+	content += "</br><div id='HCI_spe_content'></div>";
+	content += "<p id='HCI_programming_heading' class='subheading'>Programming Requirement <span id='HCI_programming'>0 / 6</span></p>";
+	content += "<input type='radio' name='HCI_programming_waiver' onchange='update();' id='HCI_programming_zero'>0 Waiver";
+	content += "<input type='radio' name='HCI_programming_waiver' onchange='update();' id='HCI_programming_three'>3 Credits Waiver";
+	content += "<input type='radio' name='HCI_programming_waiver' onchange='update();' id='HCI_programming_six'>6 Credits Waiver";
+	content += "<div id='HCI_programming_content'></div>";
+	content += "<p id='HCI_statistics_heading' class='subheading'>Statistics Requirement <span id='HCI_statistics'>0 / 3</p>";
+	var copy_number = "544";
+	content += "<div id='HCI_statistics_content'>Did you get a waiver for SI 544? <input type='radio' id='waived_544' name='not_waived_544' value='no' onchange='update();'>Yes <input type='radio' id='not_waived_544' name='not_waived_544' value='yes' onchange='update();'>No</br>";
+	content = content + "<input type='checkbox' id='544_copy' disabled='true' onchange='copyChanged(" + copy_number + "); update();'/> SI 544: Introduction to Statistics and Data Aanlysis (3)</div>";      
+	break;
+
+	case "LIS":	
+	content += "<p id='LIS_spe_heading' class='subheading'>At least 15 credits from the following list: <span id='LIS_spe'>0 / 15</span></p>";
+	content += "<p id='LIS_required_heading'>Required Course: <span id='LIS_required'>0 / 3</span></p>";
+	content += "<div id='LIS_required_content'></div>";
+	content += "</br><div id='LIS_spe_content'></div>";
+	break;
+
+	case "IAR":
+	content += "<p id='IAR_spe_heading' class='subheading'>At least 15 credits from the following list: <span id='IAR_spe'>0 / 15</span></p>";
+	content += "<div id='IAR_spe_content'></div>";
+	content += "<p id='IAR_programming_heading' class='subheading'>Programming Requirement <span id='IAR_programming'>0 / 6</span></p>";
+	content += "<input type='radio' name='IAR_programming_waiver' onchange='update();' id='IAR_programming_zero'>0 Waiver";
+	content += "<input type='radio' name='IAR_programming_waiver' onchange='update();' id='IAR_programming_three'>3 Credits Waiver";
+	content += "<input type='radio' name='IAR_programming_waiver' onchange='update();' id='IAR_programming_six'>6 Credits Waiver";
+	content += "<div id='IAR_programming_content'></div>";
+	content += "<p id='IAR_statistics_heading' class='subheading'>Statistics Requirement <span id='IAR_statistics'>0 / 3</p>";
+	var copy_number = "544";
+	content += "<div id='IAR_statistics_content'>Did you get a waiver for SI 544? <input type='radio' id='waived_544' name='not_waived_544' value='no' onchange='update();'>Yes <input type='radio' id='not_waived_544' name='not_waived_544' value='yes' onchange='update();'>No</br>";
+	content = content + "<input type='checkbox' id='544_copy' disabled='true' onchange='copyChanged(" + copy_number + "); update();'/> SI 544: Introduction to Statistics and Data Aanlysis (3)</div>";      
+        break;
+
+	default:
+	content = "";
+  }
+  document.getElementById("chosen_specialization_content").innerHTML = content;
+  write_content(["HCI_required", "HCI_spe", "HCI_programming","LIS_required", "LIS_spe", "IAR_spe", "IAR_programming"]);
+    };
+  
+    function update(){
+      update_credits();
+      for (var key in category){ 
+	if(document.getElementById(key)){
+	document.getElementById(key).innerHTML = category[key][0] + " / " + category[key][1];}
+      }
+    };
+
+    function copyChanged(class_number){
+	for (var i = 0; i < class_list.length; i++){
+	if (class_list[i].number == class_number){
+                class_list[i].checked = document.getElementById(class_number+"_copy").checked;
+                document.getElementById(class_list[i].number).checked = document.getElementById(class_number+"_copy").checked;
+            }       
+        }       
+    };
+
+
+
+// Umich email address validator
+    function validateForm()
+{
+var x=document.forms["CreditChecker"]["mail"].value;
+var atpos=x.indexOf("@");
+var dotpos=x.lastIndexOf(".");
+if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length || x.substring(atpos+1,dotpos) !== "umich")
+  {
+  alert("Please enter your UMICH email address");
+  return false;
+  }
+}
+  </script>
+
+  <script>
+    jQuery(document).ready(function(){
+      $(".accordion .heading").click(function(){
+        $(this).next().toggle();
+        return false;
+      }).next().hide();
+    });
+</script>
+</head>
+
+<body onload="write_content(['management','research_method', 'cognate', ]);" onchange="update();">
+    <style>
+    .satisfied {
+      color:green;
+    }
+    h3 {
+      cursor: pointer;
+    color:red;
+    }
+  </style>
+
+
+  <header>
+    <nav>
+      <a href="#mandatory">Mandatory</a>
+      <a href="#management">Management</a>
+      <a href="#research_method">Research Method</a>
+      <a href="#cognate">Cognate</a>
+      <a href="#pep">PEP</a>
+      <a href="#specialization">Specialization</a>
+      <a href="">Non-Specialization</a>
+    </nav>
+  </header>
+
+  <div>
+        <div><h3 id="all_heading">You have taken <span id="all">0 / 48</span> credits.</h3></div>
+          <div>For the MSI degree, all students must complete the MSI Core Requirements and reach a total of 48 credits. Check your credit totals here and report it to UMSI student service office.</div>
+
+  <form action = "process.php" name="CreditChecker" onsubmit="return validateForm();">
+
+     <div class="accordion">
+
+
+   <div><h3 id="mandatory_heading" class="heading">1. Mandatory <span id="mandatory">0 / 9</span></h3>
+      <div class="content" id="mandatory_content">
+  <input type="checkbox" id="500" name="500" onchange="update();"/><label for="500"> SI 500: Information in Social Systems: Collections, Flows, and Processing</label><br/>
+  <input type="checkbox" id="501" name="501" onchange="update();"/><label for="501"> SI 501: Contextual Inquiry and Project Management</label><br/><br/> 
+  <div>Did you get a waiver for SI 502? <input type="radio" id="waived_502" name="not_waived_502" value="no" onchange="update();">Yes
+  <input type="radio" id="not_waived_502" name="not_waived_502" value="yes" onchange="update();"/>No</div>
+  <input type="checkbox" name="502" id="502" onchange="update();"/><label for="502"> SI 502: Networked Computing: Storage, Communication, and Processing</label><br/>
+      </div></div>
+      
+      <div><h3 id="management_heading" class="heading">2. Management <span id="management">0 / 3</span></h3>
+      <div>
+  <div class="content" id="management_content"> 
+  </div>
+  Management 3 credits is enough. You can take more if you like....
+      </div>
+</div>
+
+      <div><h3 id="research_method_heading" class="heading">3. Research Method <span id="research_method">0 / 3</span></h3>
+      <div>
+  <div class="content" id="research_method_content">
+  </div>
+  Courses also on your specialization list can double count for both.
+      </div></div>
+
+      <div><h3 id="cognate_heading" class="heading">4. Cognate <span id="cognate">0 / 3 (or 6)</span></h3>
+      <div class="content" id="cognate_content">
+  Cognate 1 (3) <input type="checkbox" id="cognate1" name="cognate1" onchange="update();"/></br>
+      </div></div>
+
+
+      <div><h3 id="pep_heading" class="heading">5. PEP <span id="pep">0 / 6</span></h3>
+      <div class="content" id="pep_content">
+  <input type="checkbox" id="pep6" name="pep6" onchange="update();"/> PEP Internship (6)</br>
+      </div></div>
+
+      <div><h3 id="specialization_heading" class="heading">6. Specialization <span id="specialization">0 / 24</span></h3>
+      <div class="content" id="specialization_content">
+  Choose your specialization:
+  <select onchange="write_specialization(); update();" name = "specialization" id="s_choosing">
+    <option value=""></option>
+    <option value="HCI">HCI</option>
+    <option value="IAR">IAR</option>
+    <option value="LIS">LIS</option>
+  </select>
+  <div  id="chosen_specialization_content"></div>
+      </div></div>
+  
+
+
+<div><h3 class="heading" id="personalinfo">Submit Your Form</h3>
+  <div>
+<fieldset>
+    <legend>Comments</legend>
+  Any comments or suggestions are welcome!</br><div><textarea rows="4" name="comment" form="usrform" placeholder="Please give us some comments" spellcheck=TRUE>
+</textarea></div></br>
+     
+    <legend>We'd like to hear more from you. Please leave your name and email address</legend></br>
+      <label for = "name"> Enter Your Name.*</label></br><input type="text" id="name" name="name" placeholder="Jane Doe" maxlength="20"/></br>
+      <label for = "email">Please enter you email address.*</label></br><input type="email" id="email" name="mail" placeholder="UMICH email account" maxlength="30"/>
+     </fieldset>
+     
+     <div>Your are done! Submit the form. <input type="submit" value="Submit"></div>
+   </div></div> 
+
+
+    </div>
+  </form>
+</div>
+</body>
+</html>
